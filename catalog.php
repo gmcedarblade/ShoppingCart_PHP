@@ -139,7 +139,7 @@ and open the template in the editor.
                             <td><img src="$imgLocation" alt="$desc"</td>
                             <td class="desc">$desc</td>
                             <td class="price">$price</td>
-                            <td class="qty">
+                            <td class="numberOfItems">
                                 <label for="quantityForProduct$productId">Qty</label>
                                 <input type="text" name="$productId" id="quantityForProduct$productId" value="$qty" size="3">
                             </td>
