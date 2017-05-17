@@ -66,7 +66,7 @@ and open the template in the editor.
             // product with the product quantity from the form
             $cart[$prodId] = $quantity;
 
-        } else if ($quantity = 0 || isset($remove[$prodId])) {
+        } else if ($quantity == 0 || isset($remove[$prodId])) {
 
             //Remove this product from the cart array.
             // Which function can be used to remove or unset a variable?
@@ -88,35 +88,36 @@ and open the template in the editor.
 
 
 
-    try {
 
-        $sql = "SELECT * FROM products WHERE prodid IN ($prodIDStr) ORDER BY category, prodid";
-
-        $productResults = $pdo->query($sql);
-
-    } catch (Exception $exception) {
-
-        $error = 'Unable to select all from products';
-        echo $exception;
-        include 'error.html.php';
-        exit();
-
-    }
 
 
     if(empty($cart)) {
         echo "<h3>Your shopping cart is empty!!</h3>";
     } else {
+        try {
 
+            $sql = "SELECT * FROM products WHERE prodid IN ($prodIDStr) ORDER BY category, prodid";
+
+            $productResults = $pdo->query($sql);
+
+        } catch (Exception $exception) {
+
+            $error = 'Unable to select all from products';
+            echo $exception;
+            include 'error.html.php';
+            exit();
+
+        }
 
         ?>
 
-        <form action="cart.php" method="post">
+        <form action="cart_gcedarblade.php" method="post">
             <table>
                 <tr class="header">
                     <th>Image</th>
                     <th>Description</th>
                     <th>Price - US$</th>
+                    <th>Subtotal</th>
                     <th>Quantity</th>
                     <th>Remove</th>
                 </tr>
@@ -126,12 +127,13 @@ and open the template in the editor.
 
             $quantity = $cart[$row['prodid']];
 
-            $subTotal = $quantity * $cart[$row['prodid']];
+            $subTotal = $quantity * $row['price'];
+
 
             $totalPrice += $subTotal;
 
 
-            $price = number_format($totalPrice, 2, '.', ",");
+            $totalPrice = number_format($totalPrice, 2, '.', ",");
 
             $subTotal = number_format($subTotal, 2, '.', ',');
 //            echo "$" . $price . "\n";
@@ -141,7 +143,6 @@ and open the template in the editor.
             $desc = htmlspecialchars(strip_tags($row['description']));
             $price = htmlspecialchars(strip_tags($row['price']));
 
-            //$price = "$" . number_format($price, 2);
 
             $productId = $row['prodid'];
             echo <<<TABLEROW
@@ -150,24 +151,30 @@ and open the template in the editor.
                     <td><img src="$imgLocation" alt="$desc"</td>
                     <td class="desc">$desc</td>
                     <td class="price">$price</td>
+                    <td class="price">$subTotal</td>
                     <td class="desc">
                         <label for="quantityForProduct$productId">Qty</label>
                         <input type="text" name="$productId" id="quantityForProduct$productId" value="$quantity" size="3">
                     </td>
-                    <td class="desc">Remove<br><input type="checkbox" name="remove" id="remove" ></td>
+                    <td class="desc">Remove<br><input type="checkbox" name="remove[$productId]" id="remove" ></td>
                 </tr>
-
+                
 TABLEROW;
 
 
 
         }
     }
-
+    $_SESSION['cart'] = $cart;
     ?>
+
+
         </table>
-            <input type="submit" name="checkout" value="Check Out">
+            <?php echo "Total:" . $totalPrice . "\n"?>
+            <br><br><input type="submit" name="checkout" value="Check Out">
             <input type="submit" name="updateCart" value="Update Cart">
     </form>
+    <br><br>
+    <footer><a href="catalog.php">Continue shopping</a></footer>
 </body>
 </html>

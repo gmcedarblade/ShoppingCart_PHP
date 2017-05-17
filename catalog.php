@@ -93,7 +93,7 @@ and open the template in the editor.
         ?>
 
         <br><br>
-        <form action="cart.php" method="post">
+        <form action="cart_gcedarblade.php" method="post">
             <table>
                 <tr class="header">
                     <th>Image</th>
