@@ -46,6 +46,7 @@ and open the template in the editor.
 
     $totalPrice = 0;
     $prodIDStr = '';
+    $totalProducts = 0;
 
     if(!isset($_SESSION['numItems'])) {
         $_SESSION['numItems'] = 0;
@@ -131,7 +132,9 @@ and open the template in the editor.
 
 
             $totalPrice += $subTotal;
+            $totalProducts += $quantity;
 
+            echo "$totalProducts";
 
             $totalPrice = number_format($totalPrice, 2, '.', ",");
 
@@ -170,7 +173,10 @@ TABLEROW;
 
 
         </table>
-            <?php echo "Total:" . $totalPrice . "\n"?>
+            <?php echo "Total:" . $totalPrice . "\n";?>
+                <br>Total Items: $totalProducts
+
+
             <br><br><input type="submit" name="checkout" value="Check Out">
             <input type="submit" name="updateCart" value="Update Cart">
     </form>
